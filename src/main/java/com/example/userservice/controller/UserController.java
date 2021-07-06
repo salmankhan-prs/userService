@@ -47,4 +47,8 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userDto));
 //        System.out.println("userDto = " + userDto);
     }
+    @GetMapping("/users")
+    public ResponseEntity<Iterable<UserResponseModel>> getAllUsers(){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
+    }
 }

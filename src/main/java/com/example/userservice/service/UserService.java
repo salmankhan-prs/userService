@@ -6,5 +6,5 @@ import com.example.userservice.ui.UserResponseModel;
 public interface UserService {
 
  UserResponseModel createUser(UserDto userDto);
-Iterable<UserResponseModel>getAllusers();
+Iterable<UserResponseModel>getAllUsers();
 }

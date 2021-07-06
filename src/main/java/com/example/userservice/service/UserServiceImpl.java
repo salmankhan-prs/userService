@@ -11,6 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements  UserService{
     Logger logger= LoggerFactory.getLogger(UserServiceImpl.class);
@@ -18,6 +23,9 @@ public class UserServiceImpl implements  UserService{
     private ModelMapper modelMapper;
     @Autowired
     private UserRepo userRepo;
+    private UserEntity userEntity;
+
+
     @Override
     public UserResponseModel createUser(UserDto userDto) {
       modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -30,7 +38,17 @@ public class UserServiceImpl implements  UserService{
     }
 
     @Override
-    public Iterable<UserResponseModel> getAllusers() {
-        return null;
+    public Iterable<UserResponseModel> getAllUsers() {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+
+        Iterable<UserEntity> userEntityIterable=userRepo.findAll();
+        Iterator<UserEntity> userEntityIterator= userEntityIterable.iterator();
+        List<UserResponseModel> list= new ArrayList<>();
+        while (userEntityIterator.hasNext()){
+            list.add(modelMapper.map(userEntityIterator.next(),UserResponseModel.class));
+        }
+        logger.info("SUCCESSFULLY RETRIEVED ALL THE USERS ");
+        return list;
     }
 }

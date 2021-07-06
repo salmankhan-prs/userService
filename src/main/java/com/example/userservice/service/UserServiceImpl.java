@@ -1,5 +1,6 @@
 package com.example.userservice.service;
 
+import com.example.userservice.Exception.UserNotFoundException;
 import com.example.userservice.dao.UserRepo;
 import com.example.userservice.dto.UserDto;
 import com.example.userservice.model.UserEntity;
@@ -50,5 +51,17 @@ public class UserServiceImpl implements  UserService{
         }
         logger.info("SUCCESSFULLY RETRIEVED ALL THE USERS ");
         return list;
+    }
+
+    @Override
+    public UserResponseModel getUserById(String id) throws UserNotFoundException {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        if(!userRepo.existsByUserId(id)){
+            throw new UserNotFoundException("User not found");
+        }
+        UserEntity userEntity= userRepo.findByUserId(id);
+        return  modelMapper.map(userEntity,UserResponseModel.class);
+
+
     }
 }

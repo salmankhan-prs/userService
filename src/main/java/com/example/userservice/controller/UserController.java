@@ -1,5 +1,6 @@
 package com.example.userservice.controller;
 
+import com.example.userservice.Exception.UserNotFoundException;
 import com.example.userservice.dto.UserDto;
 import com.example.userservice.service.UserService;
 import com.example.userservice.ui.UserRequestModel;
@@ -50,5 +51,9 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<Iterable<UserResponseModel>> getAllUsers(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
+    }
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserResponseModel> getUserById(@PathVariable String id) throws UserNotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
     }
 }

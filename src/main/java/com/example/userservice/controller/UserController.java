@@ -1,7 +1,9 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.Exception.UserNotFoundException;
+import com.example.userservice.dao.UserRepo;
 import com.example.userservice.dto.UserDto;
+import com.example.userservice.model.FIndByName;
 import com.example.userservice.service.UserService;
 import com.example.userservice.ui.UserRequestModel;
 import com.example.userservice.ui.UserResponseModel;
@@ -17,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -55,5 +58,15 @@ public class UserController {
     @GetMapping("/users/{id}")
     public ResponseEntity<UserResponseModel> getUserById(@PathVariable String id) throws UserNotFoundException {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
+    }
+    @PostMapping("/users/name")
+    public ResponseEntity<List<UserResponseModel>>findByFirstNameAndLastNameOrderByLastName(@RequestBody FIndByName fIndByName){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findByFirstNameAndLastNameOrderByLastName(fIndByName.getFirstName(), fIndByName.getLastName()));
+    }
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<String>deleteByUserId(@PathVariable String id) throws UserNotFoundException {
+//
+        userService.deleteByUserId(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Successfully Deleted ");
     }
 }

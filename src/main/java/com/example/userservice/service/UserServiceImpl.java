@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImpl implements  UserService{
     Logger logger= LoggerFactory.getLogger(UserServiceImpl.class);
     @Autowired
@@ -63,5 +65,33 @@ public class UserServiceImpl implements  UserService{
         return  modelMapper.map(userEntity,UserResponseModel.class);
 
 
+    }
+
+    @Override
+    public List<UserResponseModel> findByFirstNameAndLastNameOrderByLastName(String fName, String lName) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+         List<UserEntity> userEntities=userRepo.findByFirstNameAndLastNameOrderByLastName(fName,lName);
+        List<UserResponseModel> userResponseModelList=new ArrayList<>();
+        for(UserEntity userEntity:userEntities){
+            userResponseModelList.add(modelMapper.map(userEntity,UserResponseModel.class));
+        }
+        return userResponseModelList;
+    }
+
+    @Override
+    public Integer deleteByUserId(String id) throws UserNotFoundException {
+        if(!userRepo.existsByUserId(id)){
+            throw new UserNotFoundException("User not found");
+        }
+      return  userRepo.deleteByUserId(id);
+    }
+
+    @Override
+    public UserResponseModel updateUser(UserEntity userEntity) {
+
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+     //TODO:implement the update logic
+         UserEntity userEntity1 =userRepo.save(userEntity);
+         return modelMapper.map(userEntity1,UserResponseModel.class);
     }
 }
